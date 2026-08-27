@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 const currentCity = ref('서울')
 const logMessage = ref('아직 감시 시스템이 작동하지 않았습니다.')
