@@ -1,5 +1,4 @@
 <script setup>
-import axios from 'axios'
 import BaseDashboardCard from '@/components/exercise/BaseDashboardCard.vue'
 import SearchBar from '@/components/exercise/SearchBar.vue'
 import WeatherCard from '@/components/exercise/WeatherCard.vue'
@@ -60,6 +59,9 @@ const filteredWeatherList = computed(() => {
 
 // 평균 기온 계산
 const averageTemp = computed(() => {
+  // NaN 방어
+  if (weatherList.value.length === 0) return 0
+
   const total = weatherList.value.reduce((sum, item) => {
     return sum + item.temp
   }, 0)
@@ -92,6 +94,14 @@ watchEffect(() => {
           전체 도시 평균 기온: {{ configStore.convertTemp(averageTemp)
           }}{{ configStore.unitSymbol }}
         </p>
+
+        <EmptyState v-if="isLoading" message="날씨 데이터를 불러오는 중입니다..." />
+        <EmptyState v-if="errorMessage" :message="errorMessage" />
+        <EmptyState
+          v-else-if="filteredWeatherList.length === 0"
+          message="검색 결과와 일치하는 도시가 없습니다."
+        />
+
         <WeatherCard
           v-for="city in filteredWeatherList"
           :key="city.id"
@@ -99,12 +109,6 @@ watchEffect(() => {
           @click-detail="handleClickDetail"
           :city-weather="city"
         />
-        <EmptyState
-          v-if="filteredWeatherList.length === 0"
-          message="검색 결과와 일치하는 도시가 없습니다."
-        />
-        <EmptyState v-if="isLoading" message="날씨 데이터를 불러오는 중입니다..." />
-        <EmptyState v-if="errorMessage" :message="errorMessage" />
       </ul>
     </BaseDashboardCard>
     <div class="detail-box">
