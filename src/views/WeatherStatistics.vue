@@ -6,6 +6,7 @@ import { computed } from 'vue'
 import { useConfigStore } from '@/stores/configStore'
 import EmptyState from '@/components/exercise/EmptyState.vue'
 import { useWeatherStore } from '@/stores/weatherStore'
+import WeatherDistribution from '@/components/exercise/WeatherDistribution.vue'
 
 // 온도 단위 변환을 위한 configStore 가져오기
 const configStore = useConfigStore()
@@ -55,6 +56,14 @@ const windiestCity = computed(() => {
   return weatherList.value.reduce((max, city) => {
     return city.wind > max.wind ? city : max
   })
+})
+
+// 날씨 상태별 도시 수 계산
+const weatherDistribution = computed(() => {
+  return weatherList.value.reduce((acc, city) => {
+    acc[city.status] = (acc[city.status] || 0) + 1
+    return acc
+  }, {})
 })
 
 // // 강수확률이 가장 높은 도시 계산
@@ -108,6 +117,8 @@ const windiestCity = computed(() => {
       :sub-value="`${highestRainCity.rainProbability}%`"
       /> -->
       </template>
+
+      <WeatherDistribution :distribution="weatherDistribution" />
     </div>
 
     <!-- <div class="umbrella-section">
