@@ -4,7 +4,6 @@ import { ref } from 'vue'
 const comment = ref('')
 const isAgreed = ref(false)
 const favoriteFruits = ref([])
-const gender = ref('')
 const selectedCar = ref('')
 </script>
 

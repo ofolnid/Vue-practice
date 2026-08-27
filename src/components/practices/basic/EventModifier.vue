@@ -27,7 +27,7 @@ const handleChild2 = () => {
     <div @click="handleBox" style="padding: 20px; background-color: #eee">
       <p>부모 영역 (클릭 시 alert 발동)</p>
       <!-- window.alert 대신 함수 사용-->
-      <button @click="handleChild1"> 버블링 발생 버튼</button>
+      <button @click="handleChild1">버블링 발생 버튼</button>
       <button @click.stop="handleChild2">버블링 차단 버튼</button>
     </div>
   </div>

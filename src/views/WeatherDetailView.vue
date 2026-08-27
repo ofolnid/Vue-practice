@@ -27,6 +27,8 @@ const goHome = () => {
   router.push({ name: 'WeatherHome' })
 }
 
+// console.log(0 == '0') // lint 테스트를 위한 코드
+
 // 타임스탬프를 시각으로 변환하는 함수
 const formatTime = (timestamp) => {
   return new Date(timestamp * 1000).toLocaleTimeString('ko-KR', {
