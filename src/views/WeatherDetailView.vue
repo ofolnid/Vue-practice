@@ -6,6 +6,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useConfigStore } from '@/stores/configStore'
 import { useWeatherStore } from '@/stores/weatherStore'
+import { ElSkeleton } from 'element-plus'
 
 const route = useRoute() // 현재 라우트(경로, params, query 등) 정보 조회
 const router = useRouter() // 페이지 이동 등 라우터 기능 사용
@@ -62,8 +63,7 @@ onMounted(async () => {
   <section class="detail-page">
     <PageTitle title="상세 날씨 정보" description="선택한 지역의 상세 기상 정보를 확인합니다." />
     <div class="detail-section">
-      <EmptyState v-if="isLoading" message="상세 날씨 정보를 불러오는 중입니다..." />
-
+      <el-skeleton v-if="isLoading" :rows="3" animated />
       <EmptyState v-else-if="errorMessage" :message="errorMessage" />
 
       <div v-else-if="cityData" class="detail-card">

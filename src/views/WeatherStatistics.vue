@@ -7,6 +7,7 @@ import { useConfigStore } from '@/stores/configStore'
 import EmptyState from '@/components/exercise/EmptyState.vue'
 import { useWeatherStore } from '@/stores/weatherStore'
 import WeatherDistribution from '@/components/exercise/WeatherDistribution.vue'
+import { ElSkeleton } from 'element-plus'
 
 // 온도 단위 변환을 위한 configStore 가져오기
 const configStore = useConfigStore()
@@ -83,7 +84,7 @@ const weatherDistribution = computed(() => {
   <section class="statistics-page">
     <PageTitle title="날씨 통계" description="전체 날씨 데이터 통계를 확인할 수 있습니다." />
     <div class="statistics-grid">
-      <EmptyState v-if="isLoading" message="날씨 통계를 불러오는 중입니다..." />
+      <el-skeleton v-if="isLoading" :rows="3" animated />
       <EmptyState v-else-if="errorMessage" :message="errorMessage" />
       <EmptyState
         v-else-if="weatherList.length === 0"

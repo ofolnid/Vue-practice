@@ -1,16 +1,18 @@
 <script setup>
 import { useThemeStore } from '@/stores/themeStore'
-const themeStore = useThemeStore()
+import { ElSwitch } from 'element-plus'
 
-const toggleTheme = () => {
-  themeStore.toggleTheme()
-}
+const themeStore = useThemeStore()
 </script>
 
 <template>
-  <button @click="toggleTheme">
-    {{ themeStore.theme === 'dark' ? '🌙' : '☀️' }}
-  </button>
+  <el-switch
+    v-model="themeStore.theme"
+    active-value="dark"
+    inactive-value="light"
+    active-text="Dark"
+    inactive-text="Light"
+  />
 </template>
 
 <style scoped>

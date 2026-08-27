@@ -16,7 +16,7 @@ const themeStore = useThemeStore()
 
 <style>
 .app {
-  max-width: 600px;
+  max-width: 650px;
   min-height: 100vh;
   margin: 0 auto;
 

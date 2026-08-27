@@ -8,6 +8,7 @@ import { useConfigStore } from '@/stores/configStore'
 import { useWeatherStore } from '@/stores/weatherStore'
 import EmptyState from '@/components/exercise/EmptyState.vue'
 import { storeToRefs } from 'pinia'
+import { ElSkeleton } from 'element-plus'
 
 const router = useRouter()
 
@@ -95,7 +96,7 @@ watchEffect(() => {
           }}{{ configStore.unitSymbol }}
         </p>
 
-        <EmptyState v-if="isLoading" message="날씨 데이터를 불러오는 중입니다..." />
+        <el-skeleton v-if="isLoading" :rows="3" animated />
         <EmptyState v-else-if="errorMessage" :message="errorMessage" />
         <EmptyState
           v-else-if="filteredWeatherList.length === 0"
@@ -120,7 +121,7 @@ watchEffect(() => {
 
 <style scoped>
 .weather-app {
-  width: 600px;
+  width: 650px;
   background-color: var(--color-bg);
   color: var(--color-text);
 }
