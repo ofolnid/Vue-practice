@@ -29,6 +29,11 @@ const router = createRouter({
       name: 'Statistics',
       component: () => import('@/views/WeatherStatistics.vue'),
     },
+    {
+      path: '/crud',
+      name: 'CrudExample',
+      component: () => import('@/views/CrudExampleView.vue'),
+    },
   ],
 })
 

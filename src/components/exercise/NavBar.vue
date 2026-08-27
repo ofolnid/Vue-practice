@@ -6,14 +6,19 @@ import ThemeToggler from './ThemeToggler.vue'
 
 <template>
   <nav class="nav-bar">
+    <div class="nav-top">
+      <h1 class="logo">Vue Practice</h1>
+      <div class="nav-tools">
+        <UnitToggler />
+        <ThemeToggler />
+      </div>
+    </div>
+
     <div class="nav-links">
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/about">About</RouterLink>
       <RouterLink to="/statistics">Statistics</RouterLink>
-    </div>
-    <div class="nav-tools">
-      <UnitToggler />
-      <ThemeToggler />
+      <RouterLink to="/crud">CRUD Example</RouterLink>
     </div>
   </nav>
 </template>
@@ -22,12 +27,17 @@ import ThemeToggler from './ThemeToggler.vue'
 .nav-bar {
   width: 100%;
   border-bottom: 1px solid var(--color-border);
-  display: flex;
-  justify-content: space-between;
+  display: flex-column;
   align-items: center;
   padding: 16px 20px;
   gap: 20px;
   background-color: var(--color-bg);
+}
+.nav-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .nav-links {
   display: flex;
