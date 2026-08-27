@@ -1,0 +1,58 @@
+:root {
+  /* Light Theme 기본값 */
+  --color-bg: #efefef;
+  --color-surface: #ffffff;
+
+  --color-text: #171717;
+  --color-text-secondary: #666666;
+  --color-text-muted: #888888;
+
+  --color-border: #dddddd;
+  --color-border-hover: #bbbbbb;
+
+  --color-control-bg: #efefef;
+  --color-control-hover: #eeeeee;
+  --color-control-text: #666666;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+/* Light */
+.app.light {
+  --color-bg: #efefef;
+  --color-surface: #ffffff;
+
+  --color-text: #171717;
+  --color-text-secondary: #666666;
+  --color-text-muted: #888888;
+
+  --color-border: #dddddd;
+  --color-border-hover: #bbbbbb;
+
+  --color-control-bg: #efefef;
+  --color-control-hover: #eeeeee;
+  --color-control-text: #666666;
+}
+
+/* Dark */
+.app.dark {
+  --color-bg: #171717;
+  --color-surface: #262626;
+
+  --color-text: #f5f5f5;
+  --color-text-secondary: #cccccc;
+  --color-text-muted: #aaaaaa;
+
+  --color-border: #444444;
+  --color-border-hover: #666666;
+
+  --color-control-bg: #333333;
+  --color-control-hover: #404040;
+  --color-control-text: #dddddd;
+}
