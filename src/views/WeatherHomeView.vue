@@ -6,92 +6,27 @@ import WeatherCard from '@/components/exercise/WeatherCard.vue'
 import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { useConfigStore } from '@/stores/configStore'
+import { useWeatherStore } from '@/stores/weatherStore'
 import EmptyState from '@/components/exercise/EmptyState.vue'
+import { storeToRefs } from 'pinia'
 
 const router = useRouter()
 
 // 온도 단위 변환을 위한 configStore 가져오기
 const configStore = useConfigStore()
+// 날씨 데이터를 가져오기 위한 weatherStore 가져오기
+const weatherStore = useWeatherStore()
 
-// OpenWeatherMap 검색을 위한 도시 목록
-const cityList = [
-  {
-    id: 'city_01',
-    name: '서울',
-    query: 'Seoul',
-  },
-  {
-    id: 'city_02',
-    name: '수원',
-    query: 'Suwon',
-  },
-  {
-    id: 'city_03',
-    name: '부산',
-    query: 'Busan',
-  },
-]
-
-// OpenWeatherMap API에서 날씨 상태를 한글로 변환하는 함수 (번역 품질 이슈)
-const getWeatherStatus = (main) => {
-  const statusMap = {
-    Clear: '맑음',
-    Clouds: '흐림',
-    Rain: '비',
-    Drizzle: '이슬비',
-    Thunderstorm: '뇌우',
-    Snow: '눈',
-    Mist: '안개',
-    Fog: '안개',
-    Haze: '연무',
-  }
-
-  return statusMap[main] || main
-}
-
-const weatherList = ref([])
+// weatherStore에서 상태값 가져오기
+const { weatherList, isLoading, errorMessage } = storeToRefs(weatherStore)
 
 const searchQuery = ref('')
 
 const selectedCityInfo = ref('카드를 클릭하거나 검색해보세요.')
 
-const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather'
-// OpenWeatherMap API 호출 함수
-const fetchWeather = async (city) => {
-  const response = await axios.get(BASE_URL, {
-    params: {
-      q: city.query,
-      appid: import.meta.env.VITE_OPEN_WEATHER_API_KEY,
-      units: 'metric',
-      lang: 'kr',
-    },
-  })
-
-  const data = response.data
-
-  // 날씨 데이터를 필요한 형태로 가공하여 반환
-  return {
-    id: city.id,
-    name: city.name,
-
-    temp: data.main.temp,
-    humidity: data.main.humidity,
-    status: getWeatherStatus(data.weather[0].main),
-    wind: data.wind.speed,
-  }
-}
-
-// 모든 도시의 날씨 데이터를 가져오는 함수
-const fetchWeatherList = async () => {
-  const responses = await Promise.all(cityList.map((city) => fetchWeather(city)))
-
-  console.log(responses)
-  weatherList.value = responses
-}
-
 // 컴포넌트가 마운트될 때 날씨 데이터를 가져옴
 onMounted(() => {
-  fetchWeatherList()
+  weatherStore.fetchWeatherList()
 })
 
 // 검색어 변경 이벤트 처리
@@ -168,6 +103,8 @@ watchEffect(() => {
           v-if="filteredWeatherList.length === 0"
           message="검색 결과와 일치하는 도시가 없습니다."
         />
+        <EmptyState v-if="isLoading" message="날씨 데이터를 불러오는 중입니다..." />
+        <EmptyState v-if="errorMessage" :message="errorMessage" />
       </ul>
     </BaseDashboardCard>
     <div class="detail-box">
