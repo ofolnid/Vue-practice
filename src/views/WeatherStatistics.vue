@@ -1,51 +1,38 @@
 <script setup>
+import { storeToRefs } from 'pinia'
 import PageTitle from '@/components/exercise/PageTitle.vue'
 import StatCard from '@/components/exercise/StatCard.vue'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useConfigStore } from '@/stores/configStore'
 import EmptyState from '@/components/exercise/EmptyState.vue'
-
-const weatherList = ref([
-  {
-    id: 'city_01',
-    name: '서울',
-    temp: 28,
-    humidity: 70,
-    rainProbability: 20,
-    status: '맑음',
-  },
-  {
-    id: 'city_02',
-    name: '수원',
-    temp: 24,
-    humidity: 85,
-    rainProbability: 80,
-    status: '비',
-  },
-  {
-    id: 'city_03',
-    name: '부산',
-    temp: 26,
-    humidity: 75,
-    rainProbability: 50,
-    status: '구름',
-  },
-])
+import { useWeatherStore } from '@/stores/weatherStore'
 
 // 온도 단위 변환을 위한 configStore 가져오기
 const configStore = useConfigStore()
 
+// 날씨 데이터를 가져오기 위한 weatherStore 가져오기
+const weatherStore = useWeatherStore()
+
+// weatherStore에서 상태값 가져오기
+const { weatherList, isLoading, errorMessage } = storeToRefs(weatherStore)
+
 // 평균 기온 계산
 const averageTemp = computed(() => {
+  // NaN 방어
+  if (weatherList.value.length === 0) return 0
+
   const total = weatherList.value.reduce((sum, city) => {
     return sum + city.temp
   }, 0)
 
-  return (total / weatherList.value.length).toFixed(1)
+  return total / weatherList.value.length
 })
 
 // 가장 더운 도시 계산
 const hottestCity = computed(() => {
+  // 없을 경우 null 반환
+  if (weatherList.value.length === 0) return null
+
   return weatherList.value.reduce((max, city) => {
     return city.temp > max.temp ? city : max
   })
@@ -53,53 +40,79 @@ const hottestCity = computed(() => {
 
 // 가장 습한 도시 계산
 const mostHumidCity = computed(() => {
+  // 없을 경우 null 반환
+  if (weatherList.value.length === 0) return null
+
   return weatherList.value.reduce((max, city) => {
     return city.humidity > max.humidity ? city : max
   })
 })
 
-// 강수확률이 가장 높은 도시 계산
-const highestRainCity = computed(() => {
+// 풍속이 가장 높은 도시
+const windiestCity = computed(() => {
+  if (weatherList.value.length === 0) return null
+
   return weatherList.value.reduce((max, city) => {
-    return city.rainProbability > max.rainProbability ? city : max
+    return city.wind > max.wind ? city : max
   })
 })
 
-// 우산이 필요한 도시 목록 계산
-const umbrellaCities = computed(() => {
-  return weatherList.value.filter((city) => city.rainProbability >= 60)
-})
+// // 강수확률이 가장 높은 도시 계산
+// const highestRainCity = computed(() => {
+//   return weatherList.value.reduce((max, city) => {
+//     return city.rainProbability > max.rainProbability ? city : max
+//   })
+// })
+
+// // 우산이 필요한 도시 목록 계산
+// const umbrellaCities = computed(() => {
+//   return weatherList.value.filter((city) => city.rainProbability >= 60)
+// })
 </script>
 
 <template>
   <section class="statistics-page">
     <PageTitle title="날씨 통계" description="전체 날씨 데이터 통계를 확인할 수 있습니다." />
     <div class="statistics-grid">
-      <StatCard
-        label="평균 기온"
-        :value="`${configStore.convertTemp(averageTemp)}${configStore.unitSymbol}`"
+      <EmptyState v-if="isLoading" message="날씨 통계를 불러오는 중입니다..." />
+      <EmptyState v-else-if="errorMessage" :message="errorMessage" />
+      <EmptyState
+        v-else-if="weatherList.length === 0"
+        message="통계에 사용할 날씨 데이터가 없습니다."
       />
-      <StatCard
-        label="가장 더운 지역"
-        :value="hottestCity.name"
-        :sub-value="`${configStore.convertTemp(hottestCity.temp)}${configStore.unitSymbol}`"
-      />
-      <StatCard
-        label="가장 습한 지역"
-        :value="mostHumidCity.name"
-        :sub-value="`${mostHumidCity.humidity}%`"
-      />
-      <StatCard
-        label="최고 강수확률 지역"
-        :value="highestRainCity.name"
-        :sub-value="`${highestRainCity.rainProbability}%`"
-      />
+
+      <template v-else>
+        <StatCard
+          label="평균 기온"
+          :value="`${configStore.convertTemp(averageTemp).toFixed(1)}${configStore.unitSymbol}`"
+        />
+        <StatCard
+          label="가장 더운 지역"
+          :value="hottestCity.name"
+          :sub-value="`${configStore.convertTemp(hottestCity.temp).toFixed(1)}${configStore.unitSymbol}`"
+        />
+        <StatCard
+          label="가장 습한 지역"
+          :value="mostHumidCity.name"
+          :sub-value="`${mostHumidCity.humidity}%`"
+        />
+
+        <StatCard
+          label="가장 바람이 센 지역"
+          :value="windiestCity.name"
+          :sub-value="`${windiestCity.wind}m/s`"
+        />
+        <!-- <StatCard
+      label="최고 강수확률 지역"
+      :value="highestRainCity.name"
+      :sub-value="`${highestRainCity.rainProbability}%`"
+      /> -->
+      </template>
     </div>
 
-    <div class="umbrella-section">
+    <!-- <div class="umbrella-section">
       <h3>우산이 필요한 지역</h3>
 
-      <!-- length가 0이 아닌 경우 -->
       <ul v-if="umbrellaCities.length">
         <li v-for="city in umbrellaCities" :key="city.id">
           <span>{{ city.name }}</span>
@@ -108,7 +121,7 @@ const umbrellaCities = computed(() => {
       </ul>
 
       <EmptyState v-if="umbrellaCities.length === 0" message="우산이 필요한 지역이 없습니다." />
-    </div>
+    </div> -->
   </section>
 </template>
 

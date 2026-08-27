@@ -66,7 +66,7 @@ const averageTemp = computed(() => {
     return sum + item.temp
   }, 0)
 
-  return (total / weatherList.value.length).toFixed(1)
+  return total / weatherList.value.length
 })
 
 // 변화 감시 - watch로 상태바 문구 변경 감지
@@ -96,19 +96,20 @@ watchEffect(() => {
         </p>
 
         <EmptyState v-if="isLoading" message="날씨 데이터를 불러오는 중입니다..." />
-        <EmptyState v-if="errorMessage" :message="errorMessage" />
+        <EmptyState v-else-if="errorMessage" :message="errorMessage" />
         <EmptyState
           v-else-if="filteredWeatherList.length === 0"
           message="검색 결과와 일치하는 도시가 없습니다."
         />
-
-        <WeatherCard
-          v-for="city in filteredWeatherList"
-          :key="city.id"
-          @select-card="handleSelectCard"
-          @click-detail="handleClickDetail"
-          :city-weather="city"
-        />
+        <template v-else>
+          <WeatherCard
+            v-for="city in filteredWeatherList"
+            :key="city.id"
+            @select-card="handleSelectCard"
+            @click-detail="handleClickDetail"
+            :city-weather="city"
+          />
+        </template>
       </ul>
     </BaseDashboardCard>
     <div class="detail-box">

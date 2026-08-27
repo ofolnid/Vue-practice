@@ -13,9 +13,9 @@ export const useConfigStore = defineStore('config', () => {
   // 온도를 변환하는 함수
   const convertTemp = (temp) => {
     if (unit.value === 'fahrenheit') {
-      return ((Number(temp) * 9) / 5 + 32).toFixed(1) // 화씨로 변환하여 반환
+      return (Number(temp) * 9) / 5 + 32 // 화씨로 변환하여 반환
     }
-    return temp // 섭씨일 경우 그대로 반환
+    return Number(temp) // 섭씨일 경우 그대로 반환
   }
 
   return { unit, unitSymbol, toggleUnit, convertTemp }
