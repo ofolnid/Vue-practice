@@ -33,6 +33,9 @@ export const useWeatherStore = defineStore('weather', () => {
 
   const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather'
 
+  // air pollution api url
+  const AIR_URL = 'https://api.openweathermap.org/data/2.5/air_pollution'
+
   // OpenWeatherMap 날씨 상태를 한글로 변환 (번역 품질 이슈)
   const getWeatherStatus = (main) => {
     const statusMap = {
@@ -53,6 +56,19 @@ export const useWeatherStore = defineStore('weather', () => {
     }
 
     return statusMap[main] || main
+  }
+
+  // OpenWeatherMap AQI를 한글로 변환
+  const getAirQualityStatus = (aqi) => {
+    const statusMap = {
+      1: '좋음',
+      2: '양호',
+      3: '보통',
+      4: '나쁨',
+      5: '매우 나쁨',
+    }
+
+    return statusMap[aqi] || '정보 없음'
   }
 
   // 도시 하나의 실제 날씨 데이터 가져오기
@@ -97,6 +113,47 @@ export const useWeatherStore = defineStore('weather', () => {
     }
   }
 
+  // 단일 도시 상세 날씨 데이터 가져오기 (필요한 반환형 정의)
+  const fetchWeatherDetail = async (city) => {
+    const response = await axios.get(BASE_URL, {
+      params: {
+        q: city.query,
+        appid: import.meta.env.VITE_OPEN_WEATHER_API_KEY,
+        units: 'metric',
+      },
+    })
+
+    const data = response.data
+
+    // 추가 OpenWeather API
+    const airResponse = await axios.get(AIR_URL, {
+      params: {
+        lat: data.coord.lat,
+        lon: data.coord.lon,
+        appid: import.meta.env.VITE_OPEN_WEATHER_API_KEY,
+      },
+    })
+
+    const airData = airResponse.data.list[0]
+
+    return {
+      id: city.id,
+      name: city.name,
+      temp: data.main.temp,
+      feelsLike: data.main.feels_like,
+      humidity: data.main.humidity,
+      pressure: data.main.pressure,
+      status: getWeatherStatus(data.weather[0].main),
+      wind: data.wind.speed,
+      visibility: data.visibility,
+      sunrise: data.sys.sunrise,
+      sunset: data.sys.sunset,
+      lat: data.coord.lat,
+      lon: data.coord.lon,
+      airQuality: getAirQualityStatus(airData.main.aqi),
+    }
+  }
+
   return {
     cityList,
     weatherList,
@@ -104,5 +161,6 @@ export const useWeatherStore = defineStore('weather', () => {
     errorMessage,
     fetchWeather,
     fetchWeatherList,
+    fetchWeatherDetail,
   }
 })

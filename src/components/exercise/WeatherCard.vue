@@ -64,7 +64,10 @@ const getDiscomfortIndex = (temp, humidity) => {
       <!-- api에서 강우 확률을 제공하지 않음 -->
       <!-- <span v-if="cityWeather.rainProbability >= 60" class="badge umbrella"> ☂️ 우산 필수 </span> -->
     </div>
-    <p>현재 기온: {{ configStore.convertTemp(cityWeather.temp) }}{{ configStore.unitSymbol }}</p>
+    <p>
+      현재 기온: {{ configStore.convertTemp(cityWeather.temp).toFixed(1)
+      }}{{ configStore.unitSymbol }}
+    </p>
     <!-- api에서 강우 확률을 제공하지 않음 -->
     <!-- <p>강수확률: {{ cityWeather.rainProbability }}%</p> -->
     <p>

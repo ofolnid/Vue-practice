@@ -91,7 +91,7 @@ watchEffect(() => {
       <ul class="weather-list">
         <h3>지역별 날씨 현황</h3>
         <p class="average-temp">
-          전체 도시 평균 기온: {{ configStore.convertTemp(averageTemp)
+          전체 도시 평균 기온: {{ configStore.convertTemp(averageTemp).toFixed(1)
           }}{{ configStore.unitSymbol }}
         </p>
 

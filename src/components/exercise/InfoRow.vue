@@ -23,9 +23,7 @@ defineProps({
   display: flex;
   justify-content: space-between;
 
-  padding: 14px 18px;
-  margin-top: 8px;
-
+  padding: 30px 20px;
   border: 1px solid var(--color-border);
   border-radius: 8px;
   background-color: var(--color-surface);
