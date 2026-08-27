@@ -2,7 +2,7 @@
 import { storeToRefs } from 'pinia'
 import PageTitle from '@/components/exercise/PageTitle.vue'
 import StatCard from '@/components/exercise/StatCard.vue'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useConfigStore } from '@/stores/configStore'
 import EmptyState from '@/components/exercise/EmptyState.vue'
 import { useWeatherStore } from '@/stores/weatherStore'
