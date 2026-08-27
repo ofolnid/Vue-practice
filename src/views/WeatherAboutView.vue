@@ -15,12 +15,12 @@ import PageTitle from '@/components/exercise/PageTitle.vue'
         <AboutCard
           label="날씨 정보"
           title="Weather"
-          description="지역별 기온과 강수확률을 확인할 수 있습니다."
+          description="지역별 기온과 상태를 확인할 수 있습니다."
         />
         <AboutCard
           label="생활 지수"
           title="Index"
-          description="불쾌지수와 우산 필요 여부를 확인할 수 있습니다."
+          description="도시의 불쾌 지수를 확인할 수 있습니다."
         />
         <AboutCard
           label="상세 조회"
