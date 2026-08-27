@@ -18,6 +18,13 @@ const weatherStore = useWeatherStore()
 // weatherStore에서 상태값 가져오기
 const { weatherList, isLoading, errorMessage } = storeToRefs(weatherStore)
 
+// 컴포넌트가 마운트될 때 날씨 데이터가 없으면 가져옴
+onMounted(() => {
+  if (weatherList.value.length === 0) {
+    weatherStore.fetchWeatherList()
+  }
+})
+
 // 평균 기온 계산
 const averageTemp = computed(() => {
   // NaN 방어
