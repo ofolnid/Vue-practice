@@ -165,6 +165,7 @@
 - `npm run lint`를 실행해 발견된 error, warn을 확인하고 수정했다.
 - `.env` 파일로 API key를 관리하고 `.gitignore`에 환경변수 설정을 등록해 Git에 업로드되지 않도록 했다.
 - `npm run build`를 실행해 프로젝트를 빌드했다.
+- vercel을 통해 홈페이지를 배포했다.
 
 ### 8.2 트러블 슈팅 & 배운 점
 
